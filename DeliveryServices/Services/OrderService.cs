@@ -1,29 +1,28 @@
 ﻿using DeliveryServices.Models;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DeliveryServices.Services
 {
     public class OrderService : IOrderService
     {
-        private readonly Settings _settings;
+        private readonly Settings settings;
+        private readonly ILogger logger;
 
-        public OrderService(IOptions<Settings> options)
+        public OrderService(IOptions<Settings> options, ILogger<OrderService> logger)
         {
-            _settings = options.Value;
+            this.settings = options.Value;
+            this.logger = logger;
         }
 
         public void PrintSettings()
         {
-            Console.WriteLine($"District: {_settings.CityDistrict}");
-            Console.WriteLine($"Begin: {_settings.BeginDate}");
-            Console.WriteLine($"End: {_settings.EndDate}");
-            Console.WriteLine($"DeliveryLog: {_settings.DeliveryLog}");
-            Console.WriteLine($"DeliveryOrder: {_settings.DeliveryOrder}");
+            logger.LogInformation($"Вывод всех настроек на консоль");
+            Console.WriteLine($"District: {settings.CityDistrict}");
+            Console.WriteLine($"Begin: {settings.BeginDate}");
+            Console.WriteLine($"End: {settings.EndDate}");
+            Console.WriteLine($"DeliveryLog: {settings.DeliveryLog}");
+            Console.WriteLine($"DeliveryOrder: {settings.DeliveryOrder}");
         }
     }
 }

@@ -3,6 +3,9 @@ using DeliveryServices.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using NLog;
+using NLog.Web;
 
 namespace DeliveryServices.Application
 {
@@ -16,13 +19,16 @@ namespace DeliveryServices.Application
             }
             else
             {
-                ConfigureServices(args);
+                await RunApplicationAsync(args);
             }
         }
 
-        static public IConfiguration AppConfiguration { get; set; }
-        static internal async Task ConfigureServices(string[] args)
+        static internal async Task RunApplicationAsync(string[] args)
         {
+            // Early init of NLog to allow startup and exception logging, before host is built
+            var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
+            logger.Debug("init main");
+
             // Создание и настройка хоста
             IHost host = Host.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((context, config) =>
@@ -33,11 +39,17 @@ namespace DeliveryServices.Application
                 .ConfigureServices((context, services) =>
                 {
                     // Регистрация сервиса
-                    services.AddSingleton<IOrderService, OrderService>();
+                    services.AddTransient<IOrderService, OrderService>();
 
                     // Привязка конфигурации к классу Settings
                     services.Configure<Settings>(context.Configuration.GetSection("Settings"));
                 })
+                .ConfigureLogging(logging =>
+                {
+                    // Удаляем стандартных провайдеров логирования
+                    logging.ClearProviders();
+                })
+                .UseNLog()  // Подключаем NLog как провайдер логирования
                 .Build();
 
             // Получение сервиса и вызов метода
@@ -45,16 +57,9 @@ namespace DeliveryServices.Application
             myService.PrintSettings();
 
             await host.RunAsync();
-        }
 
-        static internal string GetArgument(string[] args, string key)
-        {
-            int index = Array.IndexOf(args, key);
-            if (index >= 0 && index + 1 < args.Length)
-            {
-                return args[index + 1];
-            }
-            throw new ArgumentException($"Аргумент не найден: {key}");
+
+            // TODO :: сделать ожидание, для ввода с клавиатуры
         }
     }
 }
