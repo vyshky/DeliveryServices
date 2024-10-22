@@ -52,7 +52,7 @@ namespace DeliveryServices.Application
             {
                 return args[index + 1];
             }
-            throw new ArgumentException($"Аргумент не найден: {key}"); // TODO :: разобраться как называются аргументы и параметры которые передаются в консоли
+            throw new ArgumentException($"Аргумент не найден: {key}");
         }
         static void Log(List<OrderDto> orders)
         {
