@@ -1,39 +1,51 @@
-﻿namespace DeliveryServices.Application
+﻿using DeliveryServices.Models;
+using DeliveryServices.Services;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+
+namespace DeliveryServices.Application
 {
     internal class Program
     {
-        static string formatDate = "yyyy-MM-dd HH:mm:ss";
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            try
+            if (!(args.Length > 0))
             {
-                if (args.Length != 0)
-                {
-                    string district = GetArgument(args, "-cityDistrict");
-                    string beginDate = GetArgument(args, "-beginDate");
-                    string endDate = GetArgument(args, "-endDate");
-                    //List<OrderDto> orders = orderService.FilterOrdersByDistrictAndTime(district, formatDate, beginDate, endDate);
-                }
+                return;
             }
-            catch (FileNotFoundException ex)
+            else
             {
-                Console.WriteLine($"Файл не найден: {ex.Message}");
-            }
-            catch (IOException ex)
-            {
-                Console.WriteLine($"Ошибка ввода-вывода: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Произошла ошибка: {ex.Message}");
+                ConfigureServices(args);
             }
         }
 
-        //static internal void CreateServices()
-        //{
-        //    orderService = new OrderService(new OrderRepositoryFile("Orders.json"));
+        static public IConfiguration AppConfiguration { get; set; }
+        static internal async Task ConfigureServices(string[] args)
+        {
+            // Создание и настройка хоста
+            IHost host = Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((context, config) =>
+                {
+                    // Добавляем аргументы командной строки в конфигурацию
+                    config.AddCommandLine(args);
+                })
+                .ConfigureServices((context, services) =>
+                {
+                    // Регистрация сервиса
+                    services.AddSingleton<IOrderService, OrderService>();
 
-        //}
+                    // Привязка конфигурации к классу Settings
+                    services.Configure<Settings>(context.Configuration.GetSection("Settings"));
+                })
+                .Build();
+
+            // Получение сервиса и вызов метода
+            var myService = host.Services.GetRequiredService<IOrderService>();
+            myService.PrintSettings();
+
+            await host.RunAsync();
+        }
 
         static internal string GetArgument(string[] args, string key)
         {
@@ -44,15 +56,5 @@
             }
             throw new ArgumentException($"Аргумент не найден: {key}");
         }
-        //static void Log(List<OrderDto> orders)
-        //{
-        //    foreach (OrderDto order in orders)
-        //    {
-        //        Console.WriteLine($"Id: {order.Id}\n" +
-        //            $"District: {order.District}\n" +
-        //            $"Weight: {order.Weight}\n" +
-        //            $"DeliveryTime: {order.DeliveryTime}\n");
-        //    }
-        //}
     }
 }

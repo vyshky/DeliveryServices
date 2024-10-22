@@ -2,7 +2,7 @@
   "profiles": {
     "DeliveryServices": {
       "commandName": "Project",
-      "commandLineArgs": "-cityDistrict Обжорск\r\n-beginDate \"2018-12-21 03:18:44\"\r\n-endDate \"2025-12-21 03:18:44\"\r\n"
+      "commandLineArgs": "--Settings:cityDistrict=Обжорск\r\n--Settings:beginDate=\"2018-12-21 03:18:44\" \r\n--Settings:endDate=\"2018-12-21 03:18:44\"\r\n--Settings:deliveryLog=\"log_22.10.2024.txt\"\r\n--Settings:deliveryOrder=\"Orders.json\""
     }
   }
 }
