@@ -1,21 +1,21 @@
 # На проекте использую библиотеки:
-> Microsoft.Extensions.DependencyInjection
-> Microsoft.Extensions.Hosting
-> Microsoft.Extensions.Options
-> NLog.Extensions.Logging
-> NLog.Web.AspNetCore
-> NLog.Extensions.Hosting
-> Newtonsoft.Json
+> Microsoft.Extensions.DependencyInjection<br/>
+> Microsoft.Extensions.Hosting<br/>
+> Microsoft.Extensions.Options<br/>
+> NLog.Extensions.Logging<br/>
+> NLog.Web.AspNetCore<br/>
+> NLog.Extensions.Hosting<br/>
+> Newtonsoft.Json<br/>
 
 # Аргументы при запуске приложения, пример:
-> --Settings:cityDistrict=Обжорск
-> --Settings:beginDate="2018-12-21 03:18:44" 
-> --Settings:endDate="2018-12-21 03:18:44"
-> --Settings:deliveryLog="log_22.10.2024.txt"
-> --Settings:deliveryOrder="Orders.json"
+> --Settings:cityDistrict=Обжорск<br/>
+> --Settings:beginDate="2018-12-21 03:18:44"<br/>
+> --Settings:endDate="2018-12-21 03:18:44"<br/>
+> --Settings:deliveryLog="log_22.10.2024.txt"<br/>
+> --Settings:deliveryOrder="Orders.json"<br/>
 
 # Настройки:
-> nlog.config - настроки логирования
-> Ordes.json - тестовые данные
-> Ordes.json - тестовые данные
-> appSettings.json - настройки для хранения аргументов с дефолтными значениями
+> nlog.config - настроки логирования<br/>
+> Ordes.json - тестовые данные<br/>
+> Ordes.json - тестовые данные<br/>
+> appSettings.json - настройки для хранения аргументов с дефолтными значениями<br/>
