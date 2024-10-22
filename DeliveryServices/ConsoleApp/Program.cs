@@ -1,28 +1,18 @@
-﻿using DeliveryServices.Infrastructure.DataAccess;
-using DeliveryServices.Service;
-using DeliveryServices.Services.Dto;
-
-namespace DeliveryServices.Application
+﻿namespace DeliveryServices.Application
 {
     internal class Program
     {
-        static string district;
-        static string beginDate;
-        static string endDate;
         static string formatDate = "yyyy-MM-dd HH:mm:ss";
-        static IOrderService orderService;
         static void Main(string[] args)
         {
             try
             {
                 if (args.Length != 0)
                 {
-                    district = GetArgument(args, "-cityDistrict");
-                    beginDate = GetArgument(args, "-beginDate");
-                    endDate = GetArgument(args, "-endDate");
-                    CreateServices();
-                    List<OrderDto> orders = orderService.FilterOrdersByDistrictAndTime(district, formatDate, beginDate, endDate);
-                    Log(orders);
+                    string district = GetArgument(args, "-cityDistrict");
+                    string beginDate = GetArgument(args, "-beginDate");
+                    string endDate = GetArgument(args, "-endDate");
+                    //List<OrderDto> orders = orderService.FilterOrdersByDistrictAndTime(district, formatDate, beginDate, endDate);
                 }
             }
             catch (FileNotFoundException ex)
@@ -39,11 +29,11 @@ namespace DeliveryServices.Application
             }
         }
 
-        static internal void CreateServices()
-        {
-            orderService = new OrderService(new OrderRepositoryFile("Orders.json"));
+        //static internal void CreateServices()
+        //{
+        //    orderService = new OrderService(new OrderRepositoryFile("Orders.json"));
 
-        }
+        //}
 
         static internal string GetArgument(string[] args, string key)
         {
@@ -54,15 +44,15 @@ namespace DeliveryServices.Application
             }
             throw new ArgumentException($"Аргумент не найден: {key}");
         }
-        static void Log(List<OrderDto> orders)
-        {
-            foreach (OrderDto order in orders)
-            {
-                Console.WriteLine($"Id: {order.Id}\n" +
-                    $"District: {order.District}\n" +
-                    $"Weight: {order.Weight}\n" +
-                    $"DeliveryTime: {order.DeliveryTime}\n");
-            }
-        }
+        //static void Log(List<OrderDto> orders)
+        //{
+        //    foreach (OrderDto order in orders)
+        //    {
+        //        Console.WriteLine($"Id: {order.Id}\n" +
+        //            $"District: {order.District}\n" +
+        //            $"Weight: {order.Weight}\n" +
+        //            $"DeliveryTime: {order.DeliveryTime}\n");
+        //    }
+        //}
     }
 }
