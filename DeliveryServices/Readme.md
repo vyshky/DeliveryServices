@@ -1,4 +1,4 @@
-# На проекте использую библиотеки:
+# РќР° РїСЂРѕРµРєС‚Рµ РёСЃРїРѕР»СЊР·СѓСЋ Р±РёР±Р»РёРѕС‚РµРєРё:
 dotnet add package Microsoft.Extensions.DependencyInjection
 dotnet add package Microsoft.Extensions.Hosting
 dotnet add package Microsoft.Extensions.Options
@@ -7,15 +7,15 @@ dotnet add package NLog.Web.AspNetCore
 dotnet add package NLog.Extensions.Hosting
 dotnet add package Newtonsoft.Json
 
-# Аргументы при запуске приложения, пример:
-Настройки передаем через консоль при запуске:
---Settings:cityDistrict=Обжорск
+# РђСЂРіСѓРјРµРЅС‚С‹ РїСЂРё Р·Р°РїСѓСЃРєРµ РїСЂРёР»РѕР¶РµРЅРёСЏ, РїСЂРёРјРµСЂ:
+РќР°СЃС‚СЂРѕР№РєРё РїРµСЂРµРґР°РµРј С‡РµСЂРµР· РєРѕРЅСЃРѕР»СЊ РїСЂРё Р·Р°РїСѓСЃРєРµ:
+--Settings:cityDistrict=РћР±Р¶РѕСЂСЃРє
 --Settings:beginDate="2018-12-21 03:18:44" 
 --Settings:endDate="2018-12-21 03:18:44"
 --Settings:deliveryLog="log_22.10.2024.txt"
 --Settings:deliveryOrder="Orders.json"
 
-# Настройки:
-nlog.config - настроки логирования
-Ordes.json - тестовые данные
-appSettings.json - настройки для хранения аргументов с дефолтными значениями
+# РќР°СЃС‚СЂРѕР№РєРё:
+nlog.config - РЅР°СЃС‚СЂРѕРєРё Р»РѕРіРёСЂРѕРІР°РЅРёСЏ
+Ordes.json - С‚РµСЃС‚РѕРІС‹Рµ РґР°РЅРЅС‹Рµ
+appSettings.json - РЅР°СЃС‚СЂРѕР№РєРё РґР»СЏ С…СЂР°РЅРµРЅРёСЏ Р°СЂРіСѓРјРµРЅС‚РѕРІ СЃ РґРµС„РѕР»С‚РЅС‹РјРё Р·РЅР°С‡РµРЅРёСЏРјРё
