@@ -13,7 +13,10 @@ namespace DeliveryServices.Application
     {
         static async Task Main(string[] args)
         {
-            await RunApplicationAsync(args);
+            while (true)
+            {
+                await RunApplicationAsync(args);
+            }
         }
 
         static internal async Task RunApplicationAsync(string[] args)
