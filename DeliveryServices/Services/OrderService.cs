@@ -1,4 +1,5 @@
 ﻿using DeliveryServices.Models;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -8,6 +9,7 @@ namespace DeliveryServices.Services
     {
         private readonly Settings settings;
         private readonly ILogger logger;
+        private readonly IConfiguration config;
 
         public OrderService(IOptions<Settings> options, ILogger<OrderService> logger)
         {

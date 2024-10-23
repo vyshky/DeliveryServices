@@ -7,7 +7,7 @@
 > NLog.Extensions.Hosting<br/>
 > Newtonsoft.Json<br/>
 
-# Аргументы при запуске приложения, пример:
+# Аргументы при запуске приложения. Если не передать аргументы при запуске, то настройки подтянутся из appsettings.json. Пример:
 > --Settings:cityDistrict=Обжорск<br/>
 > --Settings:beginDate="2018-12-21 03:18:44"<br/>
 > --Settings:endDate="2018-12-21 03:18:44"<br/>

@@ -13,14 +13,7 @@ namespace DeliveryServices.Application
     {
         static async Task Main(string[] args)
         {
-            if (!(args.Length > 0))
-            {
-                return;
-            }
-            else
-            {
-                await RunApplicationAsync(args);
-            }
+            await RunApplicationAsync(args);
         }
 
         static internal async Task RunApplicationAsync(string[] args)
@@ -33,16 +26,16 @@ namespace DeliveryServices.Application
             IHost host = Host.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((context, config) =>
                 {
+                    config.AddJsonFile("appSettings.json", optional: false, reloadOnChange: true);
                     // Добавляем аргументы командной строки в конфигурацию
                     config.AddCommandLine(args);
                 })
                 .ConfigureServices((context, services) =>
                 {
-                    // Регистрация сервиса
-                    services.AddTransient<IOrderService, OrderService>();
-
                     // Привязка конфигурации к классу Settings
                     services.Configure<Settings>(context.Configuration.GetSection("Settings"));
+                    // Регистрация сервиса
+                    services.AddTransient<IOrderService, OrderService>();
                 })
                 .ConfigureLogging(logging =>
                 {
