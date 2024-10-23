@@ -33,9 +33,11 @@ namespace DeliveryServices.Application
                 .ConfigureServices((context, services) =>
                 {
                     // Привязка конфигурации к классу Settings
-                    services.Configure<Settings>(context.Configuration.GetSection("Settings"));
+                    services.Configure<Settings>(context.Configuration.GetSection("Settings")); ;
                     // Регистрация сервиса
                     services.AddTransient<IOrderService, OrderService>();
+                    // Валидация настроек по аннотациям
+                    services.AddOptions<Settings>().ValidateDataAnnotations().ValidateOnStart();
                 })
                 .ConfigureLogging(logging =>
                 {
@@ -52,7 +54,7 @@ namespace DeliveryServices.Application
             await host.RunAsync();
 
 
-            // TODO :: сделать ожидание, для ввода с клавиатуры
+            // TODO :: Логика. Сделать ожидание, для ввода с клавиатуры
         }
     }
 }
