@@ -1,8 +1,7 @@
 {
   "profiles": {
     "DeliveryServices": {
-      "commandName": "Project",
-      "commandLineArgs": "--Settings:cityDistrict=Ленивоград\r\n--Settings:beginDate=\"2018-12-21 03:18:44\"\r\n--Settings:endDate=\"2018-12-21 03:18:442\"\r\n--Settings:deliveryLog=\"log_22.10.2024.txt\"\r\n--Settings:deliveryOrder=\"Orders.json\"\r\n"
+      "commandName": "Project"
     }
   }
 }

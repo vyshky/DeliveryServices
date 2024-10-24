@@ -5,59 +5,92 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog;
+using NLog.Extensions.Logging;
 using NLog.Web;
 
 namespace DeliveryServices.Application
 {
     internal class Program
     {
-        static async Task Main(string[] args)
+        static void Main(string[] args)
         {
-            while (true)
+ 
+            var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
+
+            try
             {
-                await RunApplicationAsync(args);
+                logger.Debug("Инициализация Main");
+                var host = CreateHostBuilder(args).Build();
+                var orderService = host.Services.GetRequiredService<IOrderService>();
+                orderService.PrintSettings();
+                host.Run();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Приложение остановлено из-за ошибки");
+                throw;
+            }
+            finally
+            {
+                NLog.LogManager.Shutdown();
             }
         }
 
-        static internal async Task RunApplicationAsync(string[] args)
+        private static void ConfigureNLog(string logFilePath)
         {
-            // Early init of NLog to allow startup and exception logging, before host is built
-            var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
-            logger.Debug("init main");
+            var config = new NLog.Config.LoggingConfiguration();
 
-            // Создание и настройка хоста
-            IHost host = Host.CreateDefaultBuilder(args)
+            var fileTarget = new NLog.Targets.FileTarget("logfile")
+            {
+                FileName = logFilePath,
+                Layout = "${longdate} ${uppercase:${level}} ${message} ${exception}"
+            };
+
+            config.AddTarget(fileTarget);
+            config.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, fileTarget);
+
+            LogManager.Configuration = config;
+        }
+
+        private static Dictionary<string, string> ParseArgs(string[] args)
+        {
+            var arguments = new Dictionary<string, string>();
+            foreach (var arg in args)
+            {
+                if (arg.StartsWith("_"))
+                {
+                    var keyValue = arg.Substring(1).Split(new[] { '=' }, 2);
+                    if (keyValue.Length == 2)
+                    {
+                        arguments[keyValue[0].ToLower()] = keyValue[1].Trim('"', ' ');
+                    }
+                }
+            }
+            return arguments;
+        }
+
+        static internal IHostBuilder CreateHostBuilder(string[] args)
+        {
+            IConfigurationRoot config = new ConfigurationBuilder()
+                 .AddJsonFile(path: "appSettings.json").Build();
+            NLog.Extensions.Logging.ConfigSettingLayoutRenderer.DefaultConfiguration = config;
+            IHostBuilder host = Host.CreateDefaultBuilder(args)
+                .ConfigureServices((context, services) =>
+                {
+                    services.Configure<Settings>(context.Configuration.GetSection("Settings"));
+                    services.AddSingleton<IOrderService, OrderService>();
+                })
                 .ConfigureAppConfiguration((context, config) =>
                 {
                     config.AddJsonFile("appSettings.json", optional: false, reloadOnChange: true);
-                    // Добавляем аргументы командной строки в конфигурацию
                     config.AddCommandLine(args);
-                })
-                .ConfigureServices((context, services) =>
-                {
-                    // Привязка конфигурации к классу Settings
-                    services.Configure<Settings>(context.Configuration.GetSection("Settings")); ;
-                    // Регистрация сервиса
-                    services.AddTransient<IOrderService, OrderService>();
-                    // Валидация настроек по аннотациям
-                    services.AddOptions<Settings>().ValidateDataAnnotations().ValidateOnStart();
                 })
                 .ConfigureLogging(logging =>
                 {
-                    // Удаляем стандартных провайдеров логирования
                     logging.ClearProviders();
                 })
-                .UseNLog()  // Подключаем NLog как провайдер логирования
-                .Build();
-
-            // Получение сервиса и вызов метода
-            var myService = host.Services.GetRequiredService<IOrderService>();
-            myService.PrintSettings();
-
-            await host.RunAsync();
-
-
-            // TODO :: Логика. Сделать ожидание, для ввода с клавиатуры
+                .UseNLog();
+            return host;
         }
     }
 }

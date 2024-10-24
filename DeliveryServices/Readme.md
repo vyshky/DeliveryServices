@@ -2,6 +2,7 @@
 > Microsoft.Extensions.DependencyInjection<br/>
 > Microsoft.Extensions.Hosting<br/>
 > Microsoft.Extensions.Options<br/>
+> NLog<br/>
 > NLog.Extensions.Logging<br/>
 > NLog.Web.AspNetCore<br/>
 > NLog.Extensions.Hosting<br/>

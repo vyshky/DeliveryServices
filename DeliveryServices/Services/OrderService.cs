@@ -1,15 +1,15 @@
 ﻿using DeliveryServices.Models;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+
+
 
 namespace DeliveryServices.Services
 {
     public class OrderService : IOrderService
     {
         private readonly Settings settings;
-        private readonly ILogger logger;
-        private readonly IConfiguration config;
+        private readonly ILogger<OrderService> logger;
 
         public OrderService(IOptions<Settings> options, ILogger<OrderService> logger)
         {
@@ -19,12 +19,12 @@ namespace DeliveryServices.Services
 
         public void PrintSettings()
         {
-            logger.LogInformation($"Вывод всех настроек на консоль");
-            Console.WriteLine($"District: {settings.CityDistrict}");
-            Console.WriteLine($"Begin: {settings.BeginDate}");
-            Console.WriteLine($"End: {settings.EndDate}");
-            Console.WriteLine($"DeliveryLog: {settings.DeliveryLog}");
-            Console.WriteLine($"DeliveryOrder: {settings.DeliveryOrder}");
+            logger.LogError($"Вывод всех настроек на консоль");
+            logger.LogInformation($"District: {settings.CityDistrict}");
+            logger.LogInformation($"Begin: {settings.BeginDate}");
+            logger.LogInformation($"End: {settings.EndDate}");
+            logger.LogInformation($"DeliveryLog: {settings.DeliveryLog}");
+            logger.LogInformation($"DeliveryOrder: {settings.DeliveryOrder}");
         }
     }
 }
