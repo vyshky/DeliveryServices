@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using DeliveryServices.Services;
 using DeliveryServices.ConsoleApp;
 using DeliveryServices.Models;
+using NLog;
 
 namespace DeliveryServices.Application
 {
@@ -12,18 +13,13 @@ namespace DeliveryServices.Application
         {
             Settings settings = await ValidateCmdAsync(args);
             ServiceProvider serviceProvider = StartUp.InitializeServices(settings);
-
-            // Пример работы
             var serviceOrder = serviceProvider.GetRequiredService<IServiceOrder>();
             serviceOrder.PrintSettings();
-            // Завершение работы NLog
-            NLog.LogManager.Shutdown();
+            LogManager.Shutdown();
         }
 
         // TODO ::
-        //1 Настроить депенденси инжектион, запустить сервисы
-        //2 настройки логирования брать из appsettings
-        //3 консольные параметры передавать через консоль
+        //1 Реализовать OrderService и настроить вывод ордеров в файл
         static async Task<Settings> ValidateCmdAsync(string[] args)
         {
             // Опции для командной строки

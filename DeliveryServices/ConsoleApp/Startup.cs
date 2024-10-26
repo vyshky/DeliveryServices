@@ -72,36 +72,32 @@ namespace DeliveryServices.ConsoleApp
             });
         }
 
-        private static void ConfigureLoggingServices(IServiceCollection services, IConfiguration configuration,string path = null)
+        private static void ConfigureLoggingServices(IServiceCollection services, IConfiguration configuration, string path = null)
         {
             services.AddLogging(loggingBuilder =>
             {
                 loggingBuilder.ClearProviders();
                 loggingBuilder.AddNLog(configuration);
             });
+
             if (!string.IsNullOrEmpty(path))
             {
-                // Получаем текущую конфигурацию NLog
                 var config = LogManager.Configuration;
 
                 if (config == null)
                 {
-                    // Если конфигурация отсутствует, создаем новую
                     config = new LoggingConfiguration();
                     LogManager.Configuration = config;
                 }
 
-                // Находим существующую цель для файла (если она есть)
                 var logfile = config.FindTargetByName<FileTarget>("logfile");
 
                 if (logfile != null)
                 {
-                    // Обновляем путь для файла логов
                     logfile.FileName = Path.Combine(AppContext.BaseDirectory, path);
                 }
                 else
                 {
-                    // Если цель не найдена, создаем новую
                     logfile = new FileTarget("logfile")
                     {
                         FileName = Path.Combine(AppContext.BaseDirectory, path),
@@ -109,12 +105,10 @@ namespace DeliveryServices.ConsoleApp
                     };
                     config.AddTarget(logfile);
 
-                    // Создаем новое правило для записи в файл
                     var rule = new LoggingRule("*", LogLevel.Debug, LogLevel.Fatal, logfile);
                     config.LoggingRules.Add(rule);
                 }
 
-                // Применяем обновленную конфигурацию
                 LogManager.ReconfigExistingLoggers();
             }
         }
