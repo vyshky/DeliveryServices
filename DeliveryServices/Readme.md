@@ -1,21 +1,21 @@
 # На проекте использую библиотеки:
 > Microsoft.Extensions.DependencyInjection<br/>
-> Microsoft.Extensions.Hosting<br/>
 > Microsoft.Extensions.Options<br/>
-> NLog<br/>
 > NLog.Extensions.Logging<br/>
-> NLog.Web.AspNetCore<br/>
-> NLog.Extensions.Hosting<br/>
 > Newtonsoft.Json<br/>
+> System.CommandLine<br/>
 
-# Аргументы при запуске приложения. Если не передать аргументы при запуске, то настройки подтянутся из appsettings.json. Пример:
-> --Settings:cityDistrict=Обжорск<br/>
-> --Settings:beginDate="2018-12-21 03:18:44"<br/>
-> --Settings:endDate="2018-12-21 03:18:44"<br/>
-> --Settings:deliveryLog="log_22.10.2024.txt"<br/>
-> --Settings:deliveryOrder="Orders.json"<br/>
+# Передача неправильных аргументов в консоль, приведет логированию ошибки и подтянет настройки из appSettings.json
+# Пример:
+> --cityDistrict Обжорск<br/>
+> --beginDate "2000-12-2 10:10:00"<br/>
+> --endDate "2024-12-2 10:10:00"<br/>
+> --deliveryOrder logs/log.log<br/>
+> --deliveryLog result/orders.json<br/>
 
 # Настройки:
-> nlog.config - настроки логирования<br/>
 > Ordes.json - тестовые данные<br/>
-> appSettings.json - настройки для хранения аргументов с дефолтными значениями<br/>
+> appSettings.json - настройки для хранения аргументов с дефолтными значениями, также в этом файле настраивается nlog<br/>
+
+# Команда на запуск приложения
+> dotnet run --cityDistrict "Обжорск" --beginDate "2024-01-01 08:00:00" --endDate "2024-12-31 08:00:00" --deliveryLog "/logs/deliverySetting.log" --deliveryOrder "/orders/found_orders.json"<br/>

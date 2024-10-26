@@ -1,7 +1,8 @@
 {
   "profiles": {
     "DeliveryServices": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "--cityDistrict Обжорск\r\n--beginDate \"2000-12-2 10:10:00\"\r\n--endDate \"2024-12-2 10:10:00\"\r\n--deliveryLog logsConsole/log.log\r\n--deliveryOrder result/orders.json\r\n"
     }
   }
 }

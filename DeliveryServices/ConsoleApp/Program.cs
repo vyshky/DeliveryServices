@@ -1,96 +1,91 @@
-﻿using DeliveryServices.Models;
-using DeliveryServices.Services;
-using Microsoft.Extensions.Configuration;
+﻿using System.CommandLine;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using NLog;
-using NLog.Extensions.Logging;
-using NLog.Web;
+using DeliveryServices.Services;
+using DeliveryServices.ConsoleApp;
+using DeliveryServices.Models;
 
 namespace DeliveryServices.Application
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
- 
-            var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
+            Settings settings = await ValidateCmdAsync(args);
+            ServiceProvider serviceProvider = StartUp.InitializeServices(settings);
 
-            try
-            {
-                logger.Debug("Инициализация Main");
-                var host = CreateHostBuilder(args).Build();
-                var orderService = host.Services.GetRequiredService<IOrderService>();
-                orderService.PrintSettings();
-                host.Run();
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex, "Приложение остановлено из-за ошибки");
-                throw;
-            }
-            finally
-            {
-                NLog.LogManager.Shutdown();
-            }
+            // Пример работы
+            var serviceOrder = serviceProvider.GetRequiredService<IServiceOrder>();
+            serviceOrder.PrintSettings();
+            // Завершение работы NLog
+            NLog.LogManager.Shutdown();
         }
 
-        private static void ConfigureNLog(string logFilePath)
+        // TODO ::
+        //1 Настроить депенденси инжектион, запустить сервисы
+        //2 настройки логирования брать из appsettings
+        //3 консольные параметры передавать через консоль
+        static async Task<Settings> ValidateCmdAsync(string[] args)
         {
-            var config = new NLog.Config.LoggingConfiguration();
+            // Опции для командной строки
+            var cityDistrictOption = new Option<string>(
+                name: "--cityDistrict",
+                description: "Район доставки");
 
-            var fileTarget = new NLog.Targets.FileTarget("logfile")
+            var beginDateOption = new Option<string>(
+                name: "--beginDate",
+                description: "Дата начала доставки (формат: yyyy-MM-dd HH:mm:ss)");
+
+            var endDateOption = new Option<string>(
+                name: "--endDate",
+                description: "Дата окончания доставки (формат: yyyy-MM-dd HH:mm:ss)");
+
+            var deliveryLogOption = new Option<string>(
+                name: "--deliveryLog",
+                description: "Путь к файлу с логами");
+
+            var deliveryOrderOption = new Option<string>(
+                name: "--deliveryOrder",
+                description: "Путь к файлу с результатами заказов");
+
+            // Создание корневой команды
+            var rootCommand = new RootCommand("Программа для фильтрации заказов службы доставки");
+
+            // Добавляем опции в команду
+            rootCommand.AddOption(cityDistrictOption);
+            rootCommand.AddOption(beginDateOption);
+            rootCommand.AddOption(endDateOption);
+            rootCommand.AddOption(deliveryLogOption);
+            rootCommand.AddOption(deliveryOrderOption);
+
+            // Создаем объект Settings с значениями по умолчанию
+            Settings settings = new Settings();
+
+            // Настраиваем обработчик команды
+            rootCommand.SetHandler((cityDistrict, beginDate, endDate, deliveryLog, deliveryOrder) =>
             {
-                FileName = logFilePath,
-                Layout = "${longdate} ${uppercase:${level}} ${message} ${exception}"
-            };
+                if (!string.IsNullOrEmpty(cityDistrict))
+                    settings.CityDistrict = cityDistrict;
+                if (!string.IsNullOrEmpty(beginDate))
+                    settings.BeginDate = beginDate;
+                if (!string.IsNullOrEmpty(endDate))
+                    settings.EndDate = endDate;
+                if (!string.IsNullOrEmpty(deliveryLog))
+                    settings.DeliveryLog = deliveryLog;
+                if (!string.IsNullOrEmpty(deliveryOrder))
+                    settings.DeliveryOrder = deliveryOrder;
+            },
+                cityDistrictOption,
+                beginDateOption,
+                endDateOption,
+                deliveryLogOption,
+                deliveryOrderOption);
 
-            config.AddTarget(fileTarget);
-            config.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, fileTarget);
 
-            LogManager.Configuration = config;
-        }
+            // Запускаем команду
+            await rootCommand.InvokeAsync(args);
 
-        private static Dictionary<string, string> ParseArgs(string[] args)
-        {
-            var arguments = new Dictionary<string, string>();
-            foreach (var arg in args)
-            {
-                if (arg.StartsWith("_"))
-                {
-                    var keyValue = arg.Substring(1).Split(new[] { '=' }, 2);
-                    if (keyValue.Length == 2)
-                    {
-                        arguments[keyValue[0].ToLower()] = keyValue[1].Trim('"', ' ');
-                    }
-                }
-            }
-            return arguments;
-        }
-
-        static internal IHostBuilder CreateHostBuilder(string[] args)
-        {
-            IConfigurationRoot config = new ConfigurationBuilder()
-                 .AddJsonFile(path: "appSettings.json").Build();
-            NLog.Extensions.Logging.ConfigSettingLayoutRenderer.DefaultConfiguration = config;
-            IHostBuilder host = Host.CreateDefaultBuilder(args)
-                .ConfigureServices((context, services) =>
-                {
-                    services.Configure<Settings>(context.Configuration.GetSection("Settings"));
-                    services.AddSingleton<IOrderService, OrderService>();
-                })
-                .ConfigureAppConfiguration((context, config) =>
-                {
-                    config.AddJsonFile("appSettings.json", optional: false, reloadOnChange: true);
-                    config.AddCommandLine(args);
-                })
-                .ConfigureLogging(logging =>
-                {
-                    logging.ClearProviders();
-                })
-                .UseNLog();
-            return host;
+            // Возвращаем объект settings с установленными значениями
+            return settings;
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DeliveryServices.Services
 {
-    public interface IOrderService
+    public interface IServiceOrder
     {
         public void PrintSettings();
     }
