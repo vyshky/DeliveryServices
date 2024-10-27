@@ -16,7 +16,7 @@ public class DateFormatAttribute : ValidationAttribute
     {
         if (value == null)
         {
-            return ValidationResult.Success; // Оставляем обработку Required атрибуту
+            return ValidationResult.Success;
         }
 
         var dateString = value as string;

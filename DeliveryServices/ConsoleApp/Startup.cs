@@ -99,7 +99,6 @@ namespace DeliveryServices.ConsoleApp
                         LogManager.Configuration.LoggingRules.Remove(fileLogRule);
                     }
 
-                    // Добавляем путь для логирования
                     target = new FileTarget("file");
                     target.FileName = Path.Combine(AppContext.BaseDirectory, path);
                     target.Layout = "${longdate} ${level} ${message}";

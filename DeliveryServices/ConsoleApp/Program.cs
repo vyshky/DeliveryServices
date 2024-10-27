@@ -20,7 +20,6 @@ namespace DeliveryServices.Application
 
         static async Task<Settings> ValidateCmdAsync(string[] args)
         {
-            // Опции для командной строки
             var cityDistrictOption = new Option<string>(
                 name: "--cityDistrict",
                 description: "Район доставки");
@@ -41,20 +40,16 @@ namespace DeliveryServices.Application
                 name: "--deliveryOrder",
                 description: "Путь к файлу с результатами заказов");
 
-            // Создание корневой команды
             var rootCommand = new RootCommand("Программа для фильтрации заказов службы доставки");
 
-            // Добавляем опции в команду
             rootCommand.AddOption(cityDistrictOption);
             rootCommand.AddOption(beginDateOption);
             rootCommand.AddOption(rangeMinutesOption);
             rootCommand.AddOption(deliveryLogOption);
             rootCommand.AddOption(deliveryOrderOption);
 
-            // Создаем объект Settings с значениями по умолчанию
             Settings settings = new Settings();
 
-            // Настраиваем обработчик команды
             rootCommand.SetHandler((cityDistrict, beginDate, rangeMinutes, deliveryLog, deliveryOrder) =>
             {
                 if (!string.IsNullOrEmpty(cityDistrict))
@@ -74,11 +69,8 @@ namespace DeliveryServices.Application
                 deliveryLogOption,
                 deliveryOrderOption);
 
-
-            // Запускаем команду
             await rootCommand.InvokeAsync(args);
 
-            // Возвращаем объект settings с установленными значениями
             return settings;
         }
     }
