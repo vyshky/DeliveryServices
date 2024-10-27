@@ -1,4 +1,7 @@
 # На проекте использую библиотеки:
+> Microsoft.Extensions.Configuration<br/>
+> Microsoft.Extensions.Configuration.Json<br/>
+> Microsoft.Extensions.FileExtensions<br/>
 > Microsoft.Extensions.DependencyInjection<br/>
 > Microsoft.Extensions.Options<br/>
 > NLog.Extensions.Logging<br/>
@@ -14,7 +17,7 @@
 > --deliveryOrder result/orders.json</br>
 
 # Настройки:
-> Ordes.json - тестовые данные<br/>
+> orders.json - тестовые данные<br/>
 > appSettings.json - настройки для хранения аргументов с дефолтными значениями, также в этом файле настраивается nlog<br/>
 
 # Команда на запуск приложения

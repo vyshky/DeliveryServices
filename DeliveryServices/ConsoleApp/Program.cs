@@ -14,7 +14,7 @@ namespace DeliveryServices.Application
             Settings settings = await ValidateCmdAsync(args);
             ServiceProvider serviceProvider = StartUp.InitializeServices(settings);
             var serviceOrder = serviceProvider.GetRequiredService<IServiceOrder>();
-            serviceOrder.FilterOrdersWithinTimeRangeAndSaveToFileAsync();
+            await serviceOrder.FilterOrdersWithinTimeRangeAndSaveToFileAsync();
             LogManager.Shutdown();
         }
 
