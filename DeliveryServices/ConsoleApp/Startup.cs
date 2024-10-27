@@ -3,12 +3,10 @@ using DeliveryServices.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using NLog;
 using NLog.Config;
 using NLog.Extensions.Logging;
 using NLog.Targets;
-using System;
 using LogLevel = NLog.LogLevel;
 
 namespace DeliveryServices.ConsoleApp
@@ -56,7 +54,6 @@ namespace DeliveryServices.ConsoleApp
                 if (!string.IsNullOrEmpty(settings.DeliveryLog))
                 {
                     configuration.GetSection("Settings:DeliveryLog").Value = settings.DeliveryLog;
-                    configuration.GetSection("NLog:targets:file:fileName").Value = "${basedir}/" + settings.DeliveryLog;
                 }
 
                 if (!string.IsNullOrEmpty(settings.DeliveryOrder))
@@ -82,31 +79,34 @@ namespace DeliveryServices.ConsoleApp
 
             if (!string.IsNullOrEmpty(path))
             {
-                var config = LogManager.Configuration;
+                LogManager.Configuration = new NLogLoggingConfiguration(configuration.GetSection("NLog"));
 
-                if (config == null)
+                var target = LogManager.Configuration.FindTargetByName<FileTarget>("file");
+
+                if (target != null)
                 {
-                    config = new LoggingConfiguration();
-                    LogManager.Configuration = config;
-                }
-
-                var logfile = config.FindTargetByName<FileTarget>("logfile");
-
-                if (logfile != null)
-                {
-                    logfile.FileName = Path.Combine(AppContext.BaseDirectory, path);
+                    target.FileName = Path.Combine(AppContext.BaseDirectory, path);
                 }
                 else
                 {
-                    logfile = new FileTarget("logfile")
+                    LoggingRule fileLogRule = LogManager.Configuration.LoggingRules
+                        .Where(rule =>
+                                rule.Targets
+                        .Any(t => t is FileTarget fileTarget && fileTarget.Name == "file"))
+                        .ToList().First();
+                    if (fileLogRule != null)
                     {
-                        FileName = Path.Combine(AppContext.BaseDirectory, path),
-                        Layout = "${longdate} ${level} ${message}"
-                    };
-                    config.AddTarget(logfile);
+                        LogManager.Configuration.LoggingRules.Remove(fileLogRule);
+                    }
 
-                    var rule = new LoggingRule("*", LogLevel.Debug, LogLevel.Fatal, logfile);
-                    config.LoggingRules.Add(rule);
+                    // Добавляем путь для логирования
+                    target = new FileTarget("file");
+                    target.FileName = Path.Combine(AppContext.BaseDirectory, path);
+                    target.Layout = "${longdate} ${level} ${message}";
+                    LogManager.Configuration.AddTarget(target);
+
+                    var rule = new LoggingRule("*", LogLevel.Debug, LogLevel.Fatal, target);
+                    LogManager.Configuration.LoggingRules.Add(rule);
                 }
 
                 LogManager.ReconfigExistingLoggers();
