@@ -18,4 +18,4 @@
 > appSettings.json - настройки для хранения аргументов с дефолтными значениями, также в этом файле настраивается nlog<br/>
 
 # Команда на запуск приложения
-> dotnet run --cityDistrict "Обжорск" --beginDate "2016-10-30T12:57:42" --rangeMinutes 30 --deliveryLog "/logs/deliverySetting.log" --deliveryOrder "/orders/found_orders.json"<br/>
+> dotnet run --cityDistrict "Обжорск" --beginDate "2016-10-30 12:57:42" --rangeMinutes 30 --deliveryLog "/logs/deliverySetting.log" --deliveryOrder "/orders/found_orders.json"<br/>
