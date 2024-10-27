@@ -14,12 +14,10 @@ namespace DeliveryServices.Application
             Settings settings = await ValidateCmdAsync(args);
             ServiceProvider serviceProvider = StartUp.InitializeServices(settings);
             var serviceOrder = serviceProvider.GetRequiredService<IServiceOrder>();
-            serviceOrder.FilterOrdersWithinTimeRange();
+            serviceOrder.FilterOrdersWithinTimeRangeAndSaveToFileAsync();
             LogManager.Shutdown();
         }
 
-        // TODO ::
-        //1 Реализовать OrderService и настроить вывод ордеров в файл
         static async Task<Settings> ValidateCmdAsync(string[] args)
         {
             // Опции для командной строки
@@ -31,9 +29,9 @@ namespace DeliveryServices.Application
                 name: "--beginDate",
                 description: "Дата начала доставки (формат: yyyy-MM-dd HH:mm:ss)");
 
-            var endDateOption = new Option<string>(
-                name: "--endDate",
-                description: "Дата окончания доставки (формат: yyyy-MM-dd HH:mm:ss)");
+            var rangeMinutesOption = new Option<string>(
+                name: "--rangeMinutes",
+                description: "Дата окончания доставки в int");
 
             var deliveryLogOption = new Option<string>(
                 name: "--deliveryLog",
@@ -49,7 +47,7 @@ namespace DeliveryServices.Application
             // Добавляем опции в команду
             rootCommand.AddOption(cityDistrictOption);
             rootCommand.AddOption(beginDateOption);
-            rootCommand.AddOption(endDateOption);
+            rootCommand.AddOption(rangeMinutesOption);
             rootCommand.AddOption(deliveryLogOption);
             rootCommand.AddOption(deliveryOrderOption);
 
@@ -57,14 +55,14 @@ namespace DeliveryServices.Application
             Settings settings = new Settings();
 
             // Настраиваем обработчик команды
-            rootCommand.SetHandler((cityDistrict, beginDate, endDate, deliveryLog, deliveryOrder) =>
+            rootCommand.SetHandler((cityDistrict, beginDate, rangeMinutes, deliveryLog, deliveryOrder) =>
             {
                 if (!string.IsNullOrEmpty(cityDistrict))
                     settings.CityDistrict = cityDistrict;
                 if (!string.IsNullOrEmpty(beginDate))
                     settings.BeginDate = beginDate;
-                if (!string.IsNullOrEmpty(endDate))
-                    settings.EndDate = endDate;
+                if (!string.IsNullOrEmpty(rangeMinutes))
+                    settings.RangeMinutes = int.Parse(rangeMinutes);
                 if (!string.IsNullOrEmpty(deliveryLog))
                     settings.DeliveryLog = deliveryLog;
                 if (!string.IsNullOrEmpty(deliveryOrder))
@@ -72,7 +70,7 @@ namespace DeliveryServices.Application
             },
                 cityDistrictOption,
                 beginDateOption,
-                endDateOption,
+                rangeMinutesOption,
                 deliveryLogOption,
                 deliveryOrderOption);
 

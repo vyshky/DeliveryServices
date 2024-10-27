@@ -46,9 +46,9 @@ namespace DeliveryServices.ConsoleApp
                     configuration.GetSection("Settings:BeginDate").Value = settings.BeginDate;
                 }
 
-                if (!string.IsNullOrEmpty(settings.EndDate))
+                if (settings.RangeMinutes != 0)
                 {
-                    configuration.GetSection("Settings:EndDate").Value = settings.EndDate;
+                    configuration.GetSection("Settings:RangeMinutes").Value = settings.RangeMinutes.ToString();
                 }
 
                 if (!string.IsNullOrEmpty(settings.DeliveryLog))
@@ -63,7 +63,7 @@ namespace DeliveryServices.ConsoleApp
 
                 options.CityDistrict = configuration.GetSection("Settings:CityDistrict").Value;
                 options.BeginDate = configuration.GetSection("Settings:BeginDate").Value;
-                options.EndDate = configuration.GetSection("Settings:EndDate").Value;
+                options.RangeMinutes = int.Parse(configuration.GetSection("Settings:RangeMinutes").Value);
                 options.DeliveryLog = configuration.GetSection("Settings:DeliveryLog").Value;
                 options.DeliveryOrder = configuration.GetSection("Settings:DeliveryOrder").Value;
             });

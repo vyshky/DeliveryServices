@@ -6,6 +6,12 @@
         "deliveryTime": "2016-10-30T12:57:42"
     },
     {
+        "id": "6cee30ca-c686-4e07-9c29-788de31ee888",
+        "weight": 12.6,
+        "district": "Обжорск",
+        "deliveryTime": "2016-10-30T12:27:42"
+    },
+    {
         "id": "6279ade4-1b6c-411f-b5a1-95385b92b209",
         "weight": 76.13,
         "district": "Ленивоград",

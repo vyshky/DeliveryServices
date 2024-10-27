@@ -1,9 +1,11 @@
-﻿namespace DeliveryServices.Services
+﻿using DeliveryServices.Models;
+
+namespace DeliveryServices.Services
 {
     public interface IServiceOrder
     {
-        public void FilterOrdersWithinTimeRange();
-        public void FilterOrdersWithinTimeRangeAsync(string district, string beginTime, int endTime = 30);
-        public void PrintSettings();
+         Task FilterOrdersWithinTimeRangeAndSaveToFileAsync();
+         List<Delivery> FilterOrdersWithinTimeRange(string district, string beginTime, int rangeMinutes);
+         void PrintSettings();
     }
 }

@@ -1,7 +1,8 @@
 ﻿using DeliveryServices.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System.IO;
+using Newtonsoft.Json;
+using System.Globalization;
 
 namespace DeliveryServices.Services
 {
@@ -15,21 +16,35 @@ namespace DeliveryServices.Services
             this.settings = options.Value;
             this.logger = logger;
         }
-        public void FilterOrdersWithinTimeRange() {            
-            FilterOrdersWithinTimeRangeAsync(settings.CityDistrict, settings.BeginDate);
-        }
-        public async void FilterOrdersWithinTimeRangeAsync(string district, string beginTime, int endTime = 30)
+        public async Task FilterOrdersWithinTimeRangeAndSaveToFileAsync()
         {
-            logger.LogInformation($"Вызванна функция FilterOrdersWithinTimeRange(district={district}, beginTime={beginTime}, endTime={endTime})");
+            logger.LogInformation($"Вызванна функция FilterOrdersWithinTimeRangeAndSaveToFileAsync()");
 
-            using (StreamReader reader = new StreamReader("orders.json"))
+            List<Delivery> filteredDeliveries = FilterOrdersWithinTimeRange(settings.CityDistrict, settings.BeginDate);
+
+            string filteredJson = JsonConvert.SerializeObject(filteredDeliveries, Formatting.Indented);
+
+            string directoryPath = Path.GetDirectoryName(settings.DeliveryOrder);
+            if (!string.IsNullOrEmpty(directoryPath) && !Directory.Exists(directoryPath))
             {
-                string line = await reader.ReadToEndAsync();
-
+                Directory.CreateDirectory(directoryPath);
             }
-            //toDO ::
-            // залогировать в файл settings.DeliveryLog
-            // записать отфильрованные ордера в файл settings.DeliveryOrder
+            await File.WriteAllTextAsync(settings.DeliveryOrder, filteredJson);
+        }
+        public List<Delivery> FilterOrdersWithinTimeRange(string district, string beginTime, int rangeMinutes = 30)
+        {
+            logger.LogInformation($"Вызванна функция FilterOrdersWithinTimeRange(district={district}, beginTime={beginTime}, endTime={rangeMinutes})");
+
+            string json = File.ReadAllText("orders.json");
+
+            List<Delivery> deliveries = JsonConvert.DeserializeObject<List<Delivery>>(json);
+            DateTime beginDateTime = DateTime.ParseExact(beginTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
+            DateTime endDateTime = beginDateTime.AddMinutes(settings.RangeMinutes > 0 ? settings.RangeMinutes : rangeMinutes);
+
+            return deliveries
+             .Where(x => x.District.Equals(district, StringComparison.OrdinalIgnoreCase) && x.DeliveryTime >= beginDateTime && x.DeliveryTime <= endDateTime)
+             .ToList();
         }
 
         public void PrintSettings()
@@ -37,7 +52,7 @@ namespace DeliveryServices.Services
             logger.LogInformation($"Вывод всех настроек на консоль");
             logger.LogInformation($"District: {settings.CityDistrict}");
             logger.LogInformation($"Begin: {settings.BeginDate}");
-            logger.LogInformation($"End: {settings.EndDate}");
+            logger.LogInformation($"End: {settings.RangeMinutes}");
             logger.LogInformation($"DeliveryLog: {settings.DeliveryLog}");
             logger.LogInformation($"DeliveryOrder: {settings.DeliveryOrder}");
         }

@@ -9,9 +9,8 @@ namespace DeliveryServices.Models
         [DateFormat("yyyy-MM-dd HH:mm:ss")]
         [Required]
         public string BeginDate { get; set; }
-        [DateFormat("yyyy-MM-dd HH:mm:ss")]
         [Required]
-        public string EndDate { get; set; }
+        public int RangeMinutes { get; set; }
         [Required]
         [StringLength(100, ErrorMessage = "Максимальная длина строки 100 символов.")]
         public string DeliveryLog { get; set; }
