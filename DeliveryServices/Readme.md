@@ -17,5 +17,5 @@
 > orders.json - тестовые данные<br/>
 > appSettings.json - настройки для хранения аргументов с дефолтными значениями, также в этом файле настраивается nlog<br/>
 
-# Команда на запуск приложения
+# Команда на запуск приложения, так же попробуйте запустить без передачи аргументов
 > dotnet run --cityDistrict "Обжорск" --beginDate "2016-10-30 12:57:42" --rangeMinutes 30 --deliveryLog "/logs/deliverySetting.log" --deliveryOrder "/orders/found_orders.json"<br/>
