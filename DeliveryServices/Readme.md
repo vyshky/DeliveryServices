@@ -5,7 +5,7 @@
 > NLog.Extensions.Logging<br/>
 > System.CommandLine<br/>
 
-# Передача неправильных аргументов в консоль, приведет логированию ошибки и подтянет настройки из appSettings.json
+# Передача неправильных аргументов в консоль, приведет к логированию ошибки в консоль и применит настройки из appSettings.json
 # Пример:
 > --cityDistrict Обжорск</br>
 > --beginDate "2016-10-30 12:57:42"</br>
@@ -13,7 +13,7 @@
 > --deliveryLog logsConsole/log.log</br>
 > --deliveryOrder result/orders.json</br>
 
-# Настройки:
+# Фалы настройки:
 > orders.json - тестовые данные<br/>
 > appSettings.json - настройки для хранения аргументов с дефолтными значениями, также в этом файле настраивается nlog<br/>
 
