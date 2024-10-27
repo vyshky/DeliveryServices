@@ -1,12 +1,9 @@
-﻿using DeliveryServices.ConsoleApp;
-using DeliveryServices.Models;
+﻿using DeliveryServices.Models;
 using DeliveryServices.Services;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using Newtonsoft.Json;
-using Xunit;
 
 namespace DeliveryServices.Tests.Services
 {

@@ -1,11 +1,8 @@
 # На проекте использую библиотеки:
-> Microsoft.Extensions.Configuration<br/>
 > Microsoft.Extensions.Configuration.Json<br/>
-> Microsoft.Extensions.FileExtensions<br/>
 > Microsoft.Extensions.DependencyInjection<br/>
-> Microsoft.Extensions.Options<br/>
-> NLog.Extensions.Logging<br/>
 > Newtonsoft.Json<br/>
+> NLog.Extensions.Logging<br/>
 > System.CommandLine<br/>
 
 # Передача неправильных аргументов в консоль, приведет логированию ошибки и подтянет настройки из appSettings.json
@@ -21,4 +18,4 @@
 > appSettings.json - настройки для хранения аргументов с дефолтными значениями, также в этом файле настраивается nlog<br/>
 
 # Команда на запуск приложения
-> dotnet run --cityDistrict "Обжорск" --beginDate "2024-01-01 08:00:00" --rangeMinutes 30 --deliveryLog "/logs/deliverySetting.log" --deliveryOrder "/orders/found_orders.json"<br/>
+> dotnet run --cityDistrict "Обжорск" --beginDate "2016-10-30T12:57:42" --rangeMinutes 30 --deliveryLog "/logs/deliverySetting.log" --deliveryOrder "/orders/found_orders.json"<br/>
