@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DeliveryServices.Services
+﻿namespace DeliveryServices.Services
 {
     public interface IServiceOrder
     {
+        public void FilterOrdersWithinTimeRange();
+        public void FilterOrdersWithinTimeRangeAsync(string district, string beginTime, int endTime = 30);
         public void PrintSettings();
     }
 }

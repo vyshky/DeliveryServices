@@ -1,10 +1,7 @@
 ﻿using DeliveryServices.Models;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System.Reflection.Metadata.Ecma335;
-
-
+using System.IO;
 
 namespace DeliveryServices.Services
 {
@@ -18,9 +15,18 @@ namespace DeliveryServices.Services
             this.settings = options.Value;
             this.logger = logger;
         }
-
-        public void FilterOrdersWithinTimeRange(string district, string beginTime, int endTime = 30)
+        public void FilterOrdersWithinTimeRange() {            
+            FilterOrdersWithinTimeRangeAsync(settings.CityDistrict, settings.BeginDate);
+        }
+        public async void FilterOrdersWithinTimeRangeAsync(string district, string beginTime, int endTime = 30)
         {
+            logger.LogInformation($"Вызванна функция FilterOrdersWithinTimeRange(district={district}, beginTime={beginTime}, endTime={endTime})");
+
+            using (StreamReader reader = new StreamReader("orders.json"))
+            {
+                string line = await reader.ReadToEndAsync();
+
+            }
             //toDO ::
             // залогировать в файл settings.DeliveryLog
             // записать отфильрованные ордера в файл settings.DeliveryOrder
@@ -28,7 +34,7 @@ namespace DeliveryServices.Services
 
         public void PrintSettings()
         {
-            logger.LogError($"Вывод всех настроек на консоль");
+            logger.LogInformation($"Вывод всех настроек на консоль");
             logger.LogInformation($"District: {settings.CityDistrict}");
             logger.LogInformation($"Begin: {settings.BeginDate}");
             logger.LogInformation($"End: {settings.EndDate}");
