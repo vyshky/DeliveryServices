@@ -43,11 +43,11 @@ namespace DeliveryServices.Tests.Services
         {
             // Подготовка тестовых данных (список заказов)
             var orders = new List<Delivery>
-        {
-            new Delivery { Id = "1", District = "Тестовый район", DeliveryTime = DateTime.Parse("2023-10-01 10:05:00") },
-            new Delivery { Id = "2", District = "Другой район", DeliveryTime = DateTime.Parse("2023-10-01 10:10:00") },
-            new Delivery { Id = "3", District = "Тестовый район", DeliveryTime = DateTime.Parse("2023-10-01 10:20:00") }
-        };
+            {
+                new Delivery { Id = "1", District = "Тестовый район", DeliveryTime = DateTime.Parse("2023-10-01 10:05:00") },
+                new Delivery { Id = "2", District = "Другой район", DeliveryTime = DateTime.Parse("2023-10-01 10:10:00") },
+                new Delivery { Id = "3", District = "Тестовый район", DeliveryTime = DateTime.Parse("2023-10-01 10:20:00") }
+            };
 
             // Сериализация в JSON и запись в файл, чтобы использовать его в методе
             File.WriteAllText("orders.json", JsonConvert.SerializeObject(orders));
@@ -66,11 +66,11 @@ namespace DeliveryServices.Tests.Services
         {
             // Подготовка тестовых данных (список заказов)
             var orders = new List<Delivery>
-        {
-            new Delivery { Id = "1", District = "Тестовый район", DeliveryTime = DateTime.Parse("2023-10-01 10:05:00") },
-            new Delivery { Id = "2", District = "Другой район", DeliveryTime = DateTime.Parse("2023-10-01 10:10:00") },
-            new Delivery { Id = "3", District = "Тестовый район", DeliveryTime = DateTime.Parse("2023-10-01 10:20:00") }
-        };
+            {
+                new Delivery { Id = "1", District = "Тестовый район", DeliveryTime = DateTime.Parse("2023-10-01 10:05:00") },
+                new Delivery { Id = "2", District = "Другой район", DeliveryTime = DateTime.Parse("2023-10-01 10:10:00") },
+                new Delivery { Id = "3", District = "Тестовый район", DeliveryTime = DateTime.Parse("2023-10-01 10:20:00") }
+            };
 
             // Сериализация в JSON и запись в файл, чтобы использовать его в методе
             File.WriteAllText("orders.json", JsonConvert.SerializeObject(orders));
